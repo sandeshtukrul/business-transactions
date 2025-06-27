@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- This color is used for the native Android splash screen background. -->
+    <!-- It's set to the primary color of your light theme for branding consistency. -->
+    <color name="primary_splash_color">#1e6a4f</color>
+</resources>
