@@ -22,7 +22,7 @@ class PaymentMethodDropdown extends StatelessWidget {
         prefixIcon: Icon(Icons.payment_outlined),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
       ),
-      value: selectedPaymentMethod,
+      initialValue: selectedPaymentMethod,
       hint: const Text(selectMethodHint),
       isExpanded: true, // Background of dropdown menu
       onChanged: onChanged,

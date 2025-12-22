@@ -1,6 +1,6 @@
 import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:business_transactions/models/customer.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 
 class CustomerLocalDataSource {
   static final CustomerLocalDataSource instance = CustomerLocalDataSource._();

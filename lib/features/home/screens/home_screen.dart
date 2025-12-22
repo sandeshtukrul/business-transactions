@@ -12,6 +12,10 @@ import 'package:business_transactions/shared/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
+// ConsumerStatefulWidget:
+// This is a special Flutter widget that allows us to listen to Riverpod providers.
+// It replaces 'StatefulWidget' when we need state management.
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -26,6 +30,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
+    // TabController manages the swipe between Home, Vendors, and History.
     _tabController = TabController(length: 3, vsync: this);
   }
 
@@ -37,6 +42,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    // 1. EVENT LISTENER (Side Effects):
+    // We use ref.listen() for things that happen ONCE (like showing a Snackbar).
+    // We specifically select 'lastDeleted' to avoid unnecessary checks.
+    // If 'lastDeleted' changes (not null), we show the Undo Snackbar.
     ref.listen<(Customer, int)?>(
         homeScreenControllerProvider
             .select((asyncState) => asyncState.valueOrNull?.lastDeleted),
@@ -48,18 +57,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           context,
           '${deleteCustomer.name} $deletedSuccessfully',
           onAction: () {
+            // If Undo is clicked, notify the controller to restore data.
             ref
                 .read(homeScreenControllerProvider.notifier)
                 .undoDeleteCustomer(deleteCustomer, index);
           },
         );
 
+        // Small delay to reset the 'lastDeleted' state so the listener doesn't fire again.
         Future.delayed(const Duration(milliseconds: 100), () {
           ref.read(homeScreenControllerProvider.notifier).clearLastDeleted();
         });
       }
     });
 
+    // 2. STATE WATCHER (Reactive UI):
+    // ref.watch() makes this widget rebuild whenever the controller state changes.
     final homeAsyncState = ref.watch(homeScreenControllerProvider);
     final currentUsername = ref.watch(usernameProvider);
 
@@ -68,6 +81,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         tabController: _tabController,
         onPressed: _handleFabPressed,
       ),
+
+      // APP BAR LOGIC:
+      // The AppBar also reacts to the state (showing Balance vs Loading).
       appBar: homeAsyncState.when(
         loading: () => HomeAppBar(
           username: guestUsername,
@@ -83,6 +99,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           tabController: _tabController,
         ),
       ),
+
+      // BODY LOGIC:
+      // .when() forces us to handle all 3 states: Data, Error, and Loading.
+      // This prevents "Null Pointer Exceptions" and creates a robust UI.
       body: homeAsyncState.when(
           data: (homeState) {
             return _buildSuccessUI(homeState);
@@ -92,6 +112,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               stackTrace: stack,
               onRetry: () => ref.invalidate(homeScreenControllerProvider)),
           loading: () {
+            // PREVIOUS DATA PATTERN:
+            // If we are reloading but have old data, show the old data (faded)
+            // with a spinner on top. This is better than a blank white screen.
             final previousStateData = ref.watch(homeScreenControllerProvider
                 .select((asyncValue) => asyncValue.valueOrNull));
 
@@ -110,11 +133,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<void> _handleFabPressed() async {
+
+    // Navigate to form and wait for result (newCustomer)
     final newCustomer = await Navigator.push<Customer>(
       context,
       MaterialPageRoute(builder: (context) => const TransactionForm()),
     );
 
+    // If a customer was actually created, tell the controller to add it.
     if (newCustomer != null) {
       await ref
           .read(homeScreenControllerProvider.notifier)
