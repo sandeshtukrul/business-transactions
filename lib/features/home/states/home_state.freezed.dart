@@ -17,7 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$HomeState {
   List<Customer> get customers => throw _privateConstructorUsedError;
-  int get totalBalance => throw _privateConstructorUsedError;
+  int get totalBalance =>
+      throw _privateConstructorUsedError; // Stores the last deleted customer and their index for the Undo operation.
   (Customer, int)? get lastDeleted => throw _privateConstructorUsedError;
 
   /// Create a copy of HomeState
@@ -143,6 +144,7 @@ class _$HomeStateImpl implements _HomeState {
   @override
   @JsonKey()
   final int totalBalance;
+// Stores the last deleted customer and their index for the Undo operation.
   @override
   final (Customer, int)? lastDeleted;
 
@@ -189,7 +191,7 @@ abstract class _HomeState implements HomeState {
   @override
   List<Customer> get customers;
   @override
-  int get totalBalance;
+  int get totalBalance; // Stores the last deleted customer and their index for the Undo operation.
   @override
   (Customer, int)? get lastDeleted;
 

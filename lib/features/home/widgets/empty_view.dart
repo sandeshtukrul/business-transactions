@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+/// A generic widget for Empty States (No Customers, No Transactions).
+/// Uses Lottie animations to provide a delightful user experience.
 class EmptyView extends StatelessWidget {
   final String lottiePath;
   final String title;

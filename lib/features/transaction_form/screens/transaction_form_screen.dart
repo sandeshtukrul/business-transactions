@@ -29,6 +29,7 @@ class TransactionForm extends ConsumerStatefulWidget {
 class _TransactionFormState extends ConsumerState<TransactionForm> {
   final _formKey = GlobalKey<FormState>();
 
+  // Text Controllers for input fields
   final _customerNameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
@@ -38,6 +39,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
   void initState() {
     super.initState();
 
+    // Initialize provider and pre-fill text fields if editing
     final initialState = ref.read(transactionFormControllerProvider(
       customer: widget.customer,
       transaction: widget.transaction,
@@ -48,6 +50,8 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
         initialState.initialTransaction?.partyName ?? '';
     _descriptionController.text =
         initialState.initialTransaction?.description ?? '';
+
+    // Convert stored Int (Paisa) -> String (Rupee) for display
     _amountController.text = initialState.initialTransaction != null
         ? Formatters.getAmountInRupeeString(
             initialState.initialTransaction!.amount)
@@ -87,9 +91,10 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
     );
 
     final formState = ref.watch(formProvider);
-
     final formController = ref.read(formProvider.notifier);
 
+    // SIDE EFFECT LISTENER:
+    // Watches 'status'. If success, closes screen and returns result.
     ref.listen(formProvider.select((state) => state.status), (previous, next) {
       if (next == FormStatus.success) {
         Navigator.of(context).pop(ref.read(formProvider).result);
@@ -103,7 +108,6 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
     return Scaffold(
       appBar: CustomAppBar(title: formState.appBarTitle),
       body: Padding(
-        // Outer horizontal padding
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Form(
           key: _formKey,
@@ -120,10 +124,14 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Section 1: Customer Info (Read-only if existing customer)
                             CustomerDetailsSection(
                                 isReadOnly: isCustomerFieldReadOnly,
                                 controller: _customerNameController),
+
                             const SizedBox(height: 18),
+
+                            // Section 2: Transaction Info (Amount, Date, Type)
                             TransactionDetailsSection(
                               amountController: _amountController,
                               partyNameController: _partyNameController,
@@ -141,7 +149,7 @@ class _TransactionFormState extends ConsumerState<TransactionForm> {
               const SizedBox(height: 18),
               FormSaveButton(
                 onPressed: formState.status == FormStatus.submitting
-                    ? null
+                    ? null  // Disable button while loading
                     : _submitForm,
               ),
               const SizedBox(height: 20),

@@ -39,17 +39,29 @@ abstract class _$CustomerDetailsController
   );
 }
 
-/// See also [CustomerDetailsController].
+/// Manages the state for the Customer Details Screen.
+/// Handles CRUD operations for transactions and syncs with the Repository.
+///
+/// Copied from [CustomerDetailsController].
 @ProviderFor(CustomerDetailsController)
 const customerDetailsControllerProvider = CustomerDetailsControllerFamily();
 
-/// See also [CustomerDetailsController].
+/// Manages the state for the Customer Details Screen.
+/// Handles CRUD operations for transactions and syncs with the Repository.
+///
+/// Copied from [CustomerDetailsController].
 class CustomerDetailsControllerFamily
     extends Family<AsyncValue<CustomerDetailsState>> {
-  /// See also [CustomerDetailsController].
+  /// Manages the state for the Customer Details Screen.
+  /// Handles CRUD operations for transactions and syncs with the Repository.
+  ///
+  /// Copied from [CustomerDetailsController].
   const CustomerDetailsControllerFamily();
 
-  /// See also [CustomerDetailsController].
+  /// Manages the state for the Customer Details Screen.
+  /// Handles CRUD operations for transactions and syncs with the Repository.
+  ///
+  /// Copied from [CustomerDetailsController].
   CustomerDetailsControllerProvider call(
     String customerId,
   ) {
@@ -82,11 +94,17 @@ class CustomerDetailsControllerFamily
   String? get name => r'customerDetailsControllerProvider';
 }
 
-/// See also [CustomerDetailsController].
+/// Manages the state for the Customer Details Screen.
+/// Handles CRUD operations for transactions and syncs with the Repository.
+///
+/// Copied from [CustomerDetailsController].
 class CustomerDetailsControllerProvider
     extends AutoDisposeAsyncNotifierProviderImpl<CustomerDetailsController,
         CustomerDetailsState> {
-  /// See also [CustomerDetailsController].
+  /// Manages the state for the Customer Details Screen.
+  /// Handles CRUD operations for transactions and syncs with the Repository.
+  ///
+  /// Copied from [CustomerDetailsController].
   CustomerDetailsControllerProvider(
     String customerId,
   ) : this._internal(

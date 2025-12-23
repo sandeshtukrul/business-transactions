@@ -1,6 +1,7 @@
 import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:flutter/material.dart';
 
+/// Primary action button for submitting the form.
 class FormSaveButton extends StatelessWidget {
   final VoidCallback? onPressed;
 

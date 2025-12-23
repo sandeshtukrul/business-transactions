@@ -20,14 +20,14 @@ mixin _$TransactionFormState {
   FormMode get mode =>
       throw _privateConstructorUsedError; // Tracks submission state to show loading indicators on the save button
   FormStatus get status =>
-      throw _privateConstructorUsedError; // Initial data passed to the form
+      throw _privateConstructorUsedError; // Initial data for Edit mode
   Customer? get initialCustomer => throw _privateConstructorUsedError;
   Transaction? get initialTransaction =>
-      throw _privateConstructorUsedError; // Form fields' state
+      throw _privateConstructorUsedError; // Form Fields Values
   TransactionType get transactionType => throw _privateConstructorUsedError;
   String? get selectedPaymentMethod => throw _privateConstructorUsedError;
   DateTime? get selectedDateTime =>
-      throw _privateConstructorUsedError; // Holds the final result to be popped back
+      throw _privateConstructorUsedError; // The created/updated object returned to the previous screen
   Object? get result => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
@@ -222,12 +222,12 @@ class _$TransactionFormStateImpl implements _TransactionFormState {
   @override
   @JsonKey()
   final FormStatus status;
-// Initial data passed to the form
+// Initial data for Edit mode
   @override
   final Customer? initialCustomer;
   @override
   final Transaction? initialTransaction;
-// Form fields' state
+// Form Fields Values
   @override
   @JsonKey()
   final TransactionType transactionType;
@@ -235,7 +235,7 @@ class _$TransactionFormStateImpl implements _TransactionFormState {
   final String? selectedPaymentMethod;
   @override
   final DateTime? selectedDateTime;
-// Holds the final result to be popped back
+// The created/updated object returned to the previous screen
   @override
   final Object? result;
   @override
@@ -309,17 +309,18 @@ abstract class _TransactionFormState implements TransactionFormState {
   FormMode
       get mode; // Tracks submission state to show loading indicators on the save button
   @override
-  FormStatus get status; // Initial data passed to the form
+  FormStatus get status; // Initial data for Edit mode
   @override
   Customer? get initialCustomer;
   @override
-  Transaction? get initialTransaction; // Form fields' state
+  Transaction? get initialTransaction; // Form Fields Values
   @override
   TransactionType get transactionType;
   @override
   String? get selectedPaymentMethod;
   @override
-  DateTime? get selectedDateTime; // Holds the final result to be popped back
+  DateTime?
+      get selectedDateTime; // The created/updated object returned to the previous screen
   @override
   Object? get result;
   @override

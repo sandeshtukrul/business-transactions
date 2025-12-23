@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// The container wrapper for all list items.
+/// features a subtle gradient background and gesture detection.
 class BaseListCard extends StatelessWidget {
   final void Function(LongPressStartDetails)? onLongPress;
   final Widget child;
@@ -25,9 +27,10 @@ class BaseListCard extends StatelessWidget {
         border: Border.all(color: colorScheme.outline),
       ),
       child: GestureDetector(
+        // Triggers the context menu at the exact touch coordinates
         onLongPressStart: onLongPress,
         child: child,
-      ), // The actual content (e.g., ListTile) goes here
+      ),
     );
   }
 }

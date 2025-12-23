@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Displays a small icon and date text row (e.g., "🕒 12 Oct 2023").
 class DateTimeInfo extends StatelessWidget {
   final String dateTimeText;
   final IconData? icon;

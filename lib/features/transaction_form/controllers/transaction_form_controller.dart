@@ -6,8 +6,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transaction_form_controller.g.dart';
 
+/// Manages the state and logic for the Transaction Form.
+/// Handles initialization (mode detection) and form submission.
 @riverpod
 class TransactionFormController extends _$TransactionFormController {
+
+  /// Initialization Logic:
+  /// Automatically detects the [FormMode] based on the arguments passed.
   @override
   TransactionFormState build({Customer? customer, Transaction? transaction}) {
     FormMode mode;
@@ -19,6 +24,7 @@ class TransactionFormController extends _$TransactionFormController {
       mode = FormMode.addCustomer;
     }
 
+    // Pre-fill state if editing
     return TransactionFormState(
       mode: mode,
       initialCustomer: customer,
@@ -28,6 +34,8 @@ class TransactionFormController extends _$TransactionFormController {
       selectedDateTime: transaction?.createdAt ?? DateTime.now(),
     );
   }
+
+  // --- Field Updaters ---
 
   void setTransactionType(TransactionType type) {
     state = state.copyWith(transactionType: type);
@@ -41,6 +49,9 @@ class TransactionFormController extends _$TransactionFormController {
     state = state.copyWith(selectedDateTime: dateTime);
   }
 
+  /// Processes the form submission.
+  /// Instead of saving to the database directly, it creates the object (Customer or Transaction)
+  /// and returns it to the calling screen. This keeps the form reusable and decoupled.
   Future<void> submitForm({
     required String customerName,
     required String partyName,
@@ -52,6 +63,7 @@ class TransactionFormController extends _$TransactionFormController {
     try {
       Object? result;
 
+      // Polymorphic creation logic based on mode
       switch (state.mode) {
         case FormMode.addCustomer:
           final newTransaction = Transaction(
@@ -62,11 +74,13 @@ class TransactionFormController extends _$TransactionFormController {
             type: state.transactionType,
             createdAt: state.selectedDateTime,
           );
+          // Return new Customer with the initial transaction
           result = Customer(
               name: customerName.trim(), transactions: [newTransaction]);
           break;
 
         case FormMode.addTransaction:
+          // Return just the new Transaction
           result = Transaction(
             partyName: partyName.trim(),
             description: description?.trim(),
@@ -78,6 +92,7 @@ class TransactionFormController extends _$TransactionFormController {
           break;
 
         case FormMode.updateTransaction:
+          // Return the updated Transaction (using copyWith)
           result = state.initialTransaction!.copyWith(
             partyName: partyName.trim(),
             description: description?.trim(),
@@ -90,8 +105,7 @@ class TransactionFormController extends _$TransactionFormController {
       }
 
       // We don't save to the repository here. We pop with the result,
-      // and let the *calling screen's controller* handle persistence.
-      // This keeps responsibilities separate.
+      // Success: Calling screen will handle the actual DB save/update.
       state = state.copyWith(status: FormStatus.success, result: result);
     } catch (e) {
       state =

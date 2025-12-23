@@ -2,6 +2,7 @@ import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:business_transactions/core/utils/formatters.dart';
 import 'package:flutter/material.dart';
 
+/// A combined widget to select Date and Time sequentially.
 class DateTimePickerRow extends StatelessWidget {
   final DateTime selectedDateTime;
   final ValueChanged<DateTime> onDateTimeChanged;
@@ -14,7 +15,11 @@ class DateTimePickerRow extends StatelessWidget {
     this.buttonText = setButton,
   });
 
+  /// Chains DatePicker and TimePicker dialogs.
+  /// Updates state only if both are selected successfully.
   Future<void> _handleSetDateTime(BuildContext context) async {
+
+    // 1. Pick Date
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: selectedDateTime,
@@ -24,6 +29,7 @@ class DateTimePickerRow extends StatelessWidget {
 
     if (!context.mounted || pickedDate == null) return;
 
+    // 2. Pick Time
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(selectedDateTime),
@@ -31,6 +37,7 @@ class DateTimePickerRow extends StatelessWidget {
 
     if (!context.mounted || pickedTime == null) return;
 
+    // 3. Combine and return 
     onDateTimeChanged(DateTime(
       pickedDate.year,
       pickedDate.month,
@@ -45,33 +52,28 @@ class DateTimePickerRow extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    // Format date and time parts separately
     String formattedDate = Formatters.formatDate(selectedDateTime);
     String formattedTime = Formatters.formatTime(selectedDateTime);
 
-    // Style for the less emphasized date/time text
     final TextStyle subduedTextStyle = textTheme.bodyMedium!.copyWith(
-      // Using bodyMedium for slightly smaller/less prominent
       color: colorScheme.onSurfaceVariant
-          .withValues(alpha: 0.7), // More muted color
+          .withValues(alpha: 0.7),
     );
 
     return Column(
-      // Kept the Column in case you want to add a label above it later
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(
-              vertical: 8.0), // Added some vertical padding for the container
+              vertical: 8.0),
 
           child: Row(
             children: [
-              // Date part
               Icon(
                 Icons.calendar_month_outlined,
-                size: 18, // Slightly smaller icon
+                size: 18,
                 color: colorScheme.onSurfaceVariant
-                    .withValues(alpha: 0.7), // Muted icon color
+                    .withValues(alpha: 0.7),
               ),
               const SizedBox(width: 8),
               Text(
@@ -79,40 +81,36 @@ class DateTimePickerRow extends StatelessWidget {
                 style: subduedTextStyle,
               ),
 
-              const SizedBox(width: 12), // Spacer between date and time
+              const SizedBox(width: 12),
 
-              // Time part
               Icon(
-                Icons.access_time_outlined, // Clock icon
-                size: 18, // Slightly smaller icon
+                Icons.access_time_outlined,
+                size: 18,
                 color: colorScheme.onSurfaceVariant
-                    .withValues(alpha: 0.7), // Muted icon color
+                    .withValues(alpha: 0.7),
               ),
               const SizedBox(width: 8),
               Expanded(
-                // Allow time to expand before the button
                 child: Text(
                   formattedTime,
                   style: subduedTextStyle,
                 ),
               ),
 
-              // "Set" Button
               TextButton(
                 onPressed: () => _handleSetDateTime(context),
                 style: TextButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  minimumSize: Size(0, 36), // Ensure decent tap height
+                  minimumSize: Size(0, 36),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  // visualDensity: VisualDensity.compact, // Already compact due to padding
                 ),
                 child: Text(
                   buttonText,
                   style: textTheme.labelLarge?.copyWith(
-                      // Use labelLarge for button text
-                      color: colorScheme.primary, // Keep button text prominent
-                      fontWeight: FontWeight.bold),
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
             ],

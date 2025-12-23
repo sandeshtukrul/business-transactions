@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Reusable header for form sections (Icon + Title).
 class FormSectionHeader extends StatelessWidget {
   final IconData icon;
   final String title;

@@ -11,10 +11,14 @@ class SplashScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    // React to splash initialization state changes.
     ref.listen<AsyncValue<void>>(splashControllerProvider, (previous, next) {
-      // Only navigate if the state is data and it has changed.
+      
+      // Navigate only when initialization completes successfully
+      // and this is a new state (prevents duplicate navigation).
       if (next is AsyncData && next != previous) {
-        // Schedule navigation for after the current build cycle.
+        // Defer navigation until after the current build completes.
         Future.microtask(() {
           if (!context.mounted) return;
           Navigator.of(context).pushReplacement(
@@ -28,6 +32,7 @@ class SplashScreen extends ConsumerWidget {
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
+        // Robustly handle loading and error states during startup.
         body: splashState.when(
           data: (_) => _buildLottie(),
           error: (error, stackTrace) => ErrorView(

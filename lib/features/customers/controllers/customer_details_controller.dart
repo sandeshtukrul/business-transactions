@@ -6,8 +6,13 @@ import 'package:business_transactions/config/constants/string_const.dart';
 
 part 'customer_details_controller.g.dart';
 
+
+/// Manages the state for the Customer Details Screen.
+/// Handles CRUD operations for transactions and syncs with the Repository.
 @riverpod
 class CustomerDetailsController extends _$CustomerDetailsController {
+
+  /// Initialization: Fetches the specific customer by ID.
   @override
   Future<CustomerDetailsState> build(String customerId) async {
     final customer = await ref
@@ -20,10 +25,12 @@ class CustomerDetailsController extends _$CustomerDetailsController {
     return CustomerDetailsState(customer: customer);
   }
 
+  /// Adds a new transaction and updates the local state immediately (Optimistic UI).
   Future<void> addTransaction(Transaction newTransaction) async {
     final currentState = state.valueOrNull;
     if (currentState == null || currentState.customer == null) return;
 
+    // Create a new Customer object with the transaction added (Immutability).
     final updatedCustomer = currentState.customer!.copyWith(
       transactions: [...currentState.customer!.transactions, newTransaction],
     );
@@ -31,6 +38,7 @@ class CustomerDetailsController extends _$CustomerDetailsController {
     await _updateState(currentState.copyWith(customer: updatedCustomer));
   }
 
+  /// Updates an existing transaction by matching its ID.
   Future<void> updateTransaction(Transaction transactionToUpdate) async {
     final currentState = state.valueOrNull;
     if (currentState == null || currentState.customer == null) return;
@@ -45,6 +53,7 @@ class CustomerDetailsController extends _$CustomerDetailsController {
     await _updateState(currentState.copyWith(customer: updatedCustomer));
   }
 
+  /// Deletes a transaction but caches it in 'lastDeletedTransaction' for Undo capability.
   Future<void> deleteTransaciton(Transaction transactionToDelete) async {
     final currentState = state.valueOrNull;
     if (currentState?.customer == null) return;
@@ -61,12 +70,14 @@ class CustomerDetailsController extends _$CustomerDetailsController {
     final updatedCustomer =
         currentState.customer!.copyWith(transactions: updatedTransactions);
 
+    // Update state and store deleted item info for potential restore.
     await _updateState(currentState.copyWith(
       customer: updatedCustomer,
       lastDeletedTransaction: (transactionToDelete, originalIndex),
     ));
   }
 
+  /// Restores the last deleted transaction to its original index.
   Future<void> undoDeleteTransaction() async {
     final currentState = state.valueOrNull;
     final lastDeletedTransaction = currentState?.lastDeletedTransaction;
@@ -89,18 +100,17 @@ class CustomerDetailsController extends _$CustomerDetailsController {
     ));
   }
 
-  /// This method will be call when trnasaction is deleted and user has no option to undo.
+  /// Clears the undo cache (called when the Undo Snackbar is dismissed/timeout).
   void clearLastDeleted() {
     if (state.value == null || state.value!.lastDeletedTransaction == null) {
       return;
     }
-    // Update state by just clearing the lastDeleted property
     state = AsyncData(state.value!.copyWith(lastDeletedTransaction: null));
   }
 
+  /// Helper: Updates local state and persists changes to the Repository.
   Future<void> _updateState(CustomerDetailsState newState) async {
     final previousState = state;
-
     state = AsyncData(newState);
 
     try {

@@ -8,7 +8,10 @@ part of 'splash_controller.dart';
 
 String _$splashControllerHash() => r'3d03362f05fa768bdfa4ab2d447958ff2a751fdf';
 
-/// See also [splashController].
+/// Manages the application startup logic.
+/// Ensures all necessary checks (Auth, Configs) are complete before navigation.
+///
+/// Copied from [splashController].
 @ProviderFor(splashController)
 final splashControllerProvider = AutoDisposeFutureProvider<void>.internal(
   splashController,

@@ -10,6 +10,7 @@ import 'package:business_transactions/features/transaction_form/widgets/send_rec
 import 'package:business_transactions/shared/widgets/form_title_field.dart';
 import 'package:flutter/material.dart';
 
+/// Grouping widget for all transaction-specific fields.
 class TransactionDetailsSection extends StatelessWidget {
   final TextEditingController amountController;
   final TextEditingController partyNameController;

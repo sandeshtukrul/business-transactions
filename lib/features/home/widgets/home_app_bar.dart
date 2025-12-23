@@ -2,6 +2,8 @@ import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+/// A custom App Bar with a gradient background, SVG waves, and a floating Balance Card.
+/// Implements [PreferredSizeWidget] to define the precise height needed for the layout.
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? username;
   final String balanceValue;
@@ -21,6 +23,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      // Title with Shadow for readability over the gradient
       title: Text(
         '$homeTitlePrefix ${username ?? ''},'.trim(),
         style: textTheme.headlineSmall!.copyWith(
@@ -35,6 +38,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
       ),
+      // Background Layer: Gradient + SVG Pattern
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -51,6 +55,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           fit: BoxFit.cover,
         ),
       ),
+      // Bottom Layer: Balance Card & Tabs
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(
             _BalanceCard.kEstimatedTotalHeightWithMargin + kTextTabBarHeight),
@@ -70,8 +75,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    const double balanceCardHeight =
-        _BalanceCard.kEstimatedTotalHeightWithMargin;
+    // Calculates the exact height required so content doesn't get clipped.
+    const double balanceCardHeight = _BalanceCard.kEstimatedTotalHeightWithMargin;
     const double tabBarHeight = kTextTabBarHeight;
 
     return Size.fromHeight(kToolbarHeight + balanceCardHeight + tabBarHeight);
@@ -96,6 +101,7 @@ class _BalanceCard extends StatelessWidget {
 
     return Container(
       height: _kCardContentHeight,
+      // Glassmorphism-style container
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: colorScheme.surface.withValues(alpha: 0.85),
@@ -111,7 +117,8 @@ class _BalanceCard extends StatelessWidget {
       margin: const EdgeInsets.only(
           bottom: _kSingleSideVerticalMargin,
           left: 16,
-          right: 16), // Margin applied here
+          right: 16,
+          ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

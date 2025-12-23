@@ -10,6 +10,8 @@ import 'package:business_transactions/shared/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
+/// Renders the list of transactions associated with a customer.
 class TransactionListView extends ConsumerWidget {
   final Customer customer;
 
@@ -31,7 +33,9 @@ class TransactionListView extends ConsumerWidget {
       itemBuilder: (_, index) {
         final transaction = customer.transactions[index];
         return TransactionListItem(
-          key: ValueKey(transaction.id),
+          key: ValueKey(transaction.id), // Optimize list updates
+
+          // Edit Action
           onTap: () async {
             final updatedTransaction = await Navigator.push<Transaction>(
                 context,
@@ -51,6 +55,8 @@ class TransactionListView extends ConsumerWidget {
                   '"${updatedTransaction.partyName}" $updatedSuccessfully');
             }
           },
+
+          // Delete Action
           onDelete: () async {
             final bool confirmed = await DialogHelper.showConfirmDelete(
               context: context,

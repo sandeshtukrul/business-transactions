@@ -1,6 +1,9 @@
 import 'package:business_transactions/data/local/customer_local_data_source.dart';
 import 'package:business_transactions/models/customer.dart';
 
+
+/// Repository layer acting as an abstraction over the Data Source.
+/// Decouples the UI from the underlying storage implementation (Hive).
 class CustomerRepository {
   final CustomerLocalDataSource localDataSource;
 

@@ -41,16 +41,28 @@ abstract class _$TransactionFormController
   });
 }
 
-/// See also [TransactionFormController].
+/// Manages the state and logic for the Transaction Form.
+/// Handles initialization (mode detection) and form submission.
+///
+/// Copied from [TransactionFormController].
 @ProviderFor(TransactionFormController)
 const transactionFormControllerProvider = TransactionFormControllerFamily();
 
-/// See also [TransactionFormController].
+/// Manages the state and logic for the Transaction Form.
+/// Handles initialization (mode detection) and form submission.
+///
+/// Copied from [TransactionFormController].
 class TransactionFormControllerFamily extends Family<TransactionFormState> {
-  /// See also [TransactionFormController].
+  /// Manages the state and logic for the Transaction Form.
+  /// Handles initialization (mode detection) and form submission.
+  ///
+  /// Copied from [TransactionFormController].
   const TransactionFormControllerFamily();
 
-  /// See also [TransactionFormController].
+  /// Manages the state and logic for the Transaction Form.
+  /// Handles initialization (mode detection) and form submission.
+  ///
+  /// Copied from [TransactionFormController].
   TransactionFormControllerProvider call({
     Customer? customer,
     Transaction? transaction,
@@ -86,10 +98,16 @@ class TransactionFormControllerFamily extends Family<TransactionFormState> {
   String? get name => r'transactionFormControllerProvider';
 }
 
-/// See also [TransactionFormController].
+/// Manages the state and logic for the Transaction Form.
+/// Handles initialization (mode detection) and form submission.
+///
+/// Copied from [TransactionFormController].
 class TransactionFormControllerProvider extends AutoDisposeNotifierProviderImpl<
     TransactionFormController, TransactionFormState> {
-  /// See also [TransactionFormController].
+  /// Manages the state and logic for the Transaction Form.
+  /// Handles initialization (mode detection) and form submission.
+  ///
+  /// Copied from [TransactionFormController].
   TransactionFormControllerProvider({
     Customer? customer,
     Transaction? transaction,

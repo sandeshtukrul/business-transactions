@@ -2,6 +2,7 @@ import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:business_transactions/core/utils/validators.dart';
 import 'package:flutter/material.dart';
 
+/// Dropdown menu for selecting Payment Methods (Cash, UPI, etc.).
 class PaymentMethodDropdown extends StatelessWidget {
   final String? selectedPaymentMethod;
   final ValueChanged<String?> onChanged;
@@ -24,7 +25,7 @@ class PaymentMethodDropdown extends StatelessWidget {
       ),
       initialValue: selectedPaymentMethod,
       hint: const Text(selectMethodHint),
-      isExpanded: true, // Background of dropdown menu
+      isExpanded: true, // Ensures the dropdown takes full width
       onChanged: onChanged,
       items: paymentMethods.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(

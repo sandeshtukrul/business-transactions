@@ -7,36 +7,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_controller.g.dart';
 
-// CONTROLLER (The Manager):
-// This class handles all "Business Logic" for the Home Screen.
-// The UI (View) should never talk to the Database directly; it must go through here.
-// We use [AsyncNotifier] because our state loads asynchronously (from the DB).
+/// Manages the state for the Home Screen (Dashboard).
+/// Handles fetching customers, calculating total balance, and CRUD operations.
 @riverpod
 class HomeScreenController extends _$HomeScreenController {
-
-
-  // DEPENDENCY INJECTION:
-  // We don't create a "new Repository()" here. We ask Riverpod to give us one.
-  // This makes the code modular and easier to test.
-  // This decoupling allows us to easily swap the repository (e.g., for testing).
   late final CustomerRepository _repository =
       ref.read(customerRepositoryProvider);
 
 
-  // BUILD METHOD:
-  // This is the starting point. When the screen loads, this function runs.
-  // It fetches the initial data from Hive and prepares the state. (Loading, Error, or Data).
+  /// Initialization: Fetches initial data, sorts it, and calculates the total balance.
   @override
   Future<HomeState> build() async {
     final customers = await _loadInitialData();
 
-    // SORTING LOGIC:
     // We sort customers by 'createdAt' (newest first) so the user sees recent activity.
     customers.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-    // AGGREGATION LOGIC:
-    // We calculate the total balance dynamically.
-    // This ensures the "Dashboard" balance is always in sync with the list.
+    // Calculate total balance across all customers (Asset - Liability)
     final totalBalance =
         customers.fold<int>(0, (sum, c) => sum + c.currentBalance);
 
@@ -53,33 +40,30 @@ class HomeScreenController extends _$HomeScreenController {
   }
 
 
-  // OPTIMISTIC UPDATE PATTERN:
-  // This is a professional trick to make the app feel faster.
-  // Instead of waiting for the Database to finish saving (which takes milliseconds),
-  // we update the UI *instantly*. This makes the app feel incredibly fast.
+  /// Adds a new customer using Optimistic UI updates.
   Future<void> addCustomer(Customer newCustomer) async {
 
-    // 1. Guard clause: If data hasn't loaded yet, we can't add to it.
+    // Guard clause: If data hasn't loaded yet, we can't add to it.
     if (state.value == null) return;
 
-    // 2. Snapshot the current state (in case we need to undo/rollback).
+    // Snapshot the current state (in case we need to undo/rollback).
     final originalList = state.value!.customers;
 
-    // 3. Update UI IMMEDIATELY (Optimistic):
-    // We create a new list with the new customer added.
     final newList = List<Customer>.from(originalList)..add(newCustomer);
+
+    // 1. Update UI immediately
     _updateState(state.value!.copyWith(customers: newList));
 
-    // 4. Perform the actual Database write in the background.
     try {
+      // 2. Persist to Database
       await _repository.saveCustomer(newCustomer);
     } catch (e) {
-      // 5. ROLLBACK ON ERROR:
-      // If the DB fails, we revert the UI to 'originalList' so the user knows it failed.
+      // 3. Rollback on failure
       _updateState(state.value!.copyWith(customers: originalList));
     }
   }
 
+  /// Updates an existing customer (e.g., renaming).
   Future<void> updateCustomer(Customer customerToUpdate) async {
     if (state.value == null) return;
 
@@ -88,7 +72,6 @@ class HomeScreenController extends _$HomeScreenController {
 
     if (index == -1) return;
 
-    // Optimistic Update
     final newList = List<Customer>.from(originalList);
     newList[index] = customerToUpdate;
 
@@ -102,8 +85,7 @@ class HomeScreenController extends _$HomeScreenController {
     }
   }
 
-  // DELETE WITH UNDO SUPPORT:
-  // We track 'lastDeleted' in the state so the UI can show a Snackbar.
+  /// Deletes a customer and caches the deletion for "Undo" functionality.
   Future<void> deleteCustomer(Customer customerToDelete) async {
     if (state.value == null) return;
 
@@ -113,11 +95,9 @@ class HomeScreenController extends _$HomeScreenController {
 
     if (originalIndex == -1) return;
 
-    // Remove locally first
     final newList = List<Customer>.from(originalList)..removeAt(originalIndex);
 
-    // Update state AND set the 'lastDeleted' property.
-    // The UI listens to 'lastDeleted' to trigger the "Undo" Snackbar.
+    // Update state and set 'lastDeleted' for the Undo Snackbar
     _updateState(state.value!.copyWith(
       customers: newList,
       lastDeleted: (customerToDelete, originalIndex),
@@ -133,14 +113,11 @@ class HomeScreenController extends _$HomeScreenController {
     }
   }
 
-
-  // UNDO FUNCTIONALITY:
-  // Called when the user taps "Undo" on the Snackbar.
+  /// Restores a deleted customer to their original position.
   Future<void> undoDeleteCustomer(
       Customer customerToRestore, int originalIndex) async {
     if (state.value == null) return;
 
-    // Re-insert the customer at their exact previous position.
     final newList = List<Customer>.from(state.value!.customers)
       ..insert(originalIndex, customerToRestore);
 
@@ -159,8 +136,7 @@ class HomeScreenController extends _$HomeScreenController {
     }
   }
 
-  // STATE RECALCULATION:
-  // Whenever the list changes, we must re-sort and re-calculate the total balance.
+  /// Helper: Recalculates sort order and total balance whenever the list changes.
   void _updateState(HomeState newState) {
     if (state.value == null) return;
 
@@ -177,14 +153,14 @@ class HomeScreenController extends _$HomeScreenController {
     ));
   }
 
-  // Clears the "Undo" memory so the Snackbar doesn't trigger again inappropriately.
+  /// Clears the Undo cache (called after Snackbar dismissal).
   void clearLastDeleted() {
     if (state.value == null || state.value!.lastDeleted == null) return;
     state = AsyncData(state.value!.copyWith(lastDeleted: null));
   }
 }
 
-// Simple provider for a username (Mock data for now)
+// Simple provider for a username (Mock)
 @riverpod
 String? username(Ref ref) {
   return 'Sandesh';

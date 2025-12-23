@@ -6,6 +6,8 @@ import 'package:business_transactions/shared/widgets/list_item/date_time_info.da
 import 'package:business_transactions/shared/widgets/list_item/list_tile_content.dart';
 import 'package:flutter/material.dart';
 
+
+/// Displays a single transaction card with date, amount, and description.
 class TransactionListItem extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onDelete;

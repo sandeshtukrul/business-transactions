@@ -2,7 +2,12 @@ import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:business_transactions/shared/widgets/form_title_field.dart';
 import 'package:flutter/material.dart';
 
+/// Central utility for displaying application-wide dialogs.
+/// Abstracts the UI complexity so screens can just call `await DialogHelper.show...`.
 class DialogHelper {
+
+  /// Shows a "Destructive Action" confirmation dialog (e.g., Delete).
+  /// Returns [true] if confirmed, [false] otherwise.
   static Future<bool> showConfirmDelete({
     required BuildContext context,
     required String title,
@@ -20,6 +25,8 @@ class DialogHelper {
     return confirmed ?? false;
   }
 
+/// Displays an input dialog for editing text (e.g., Customer Name).
+/// Returns the [String] entered by the user, or null if cancelled.
   static Future<String?> showEditTextDialog({
     required BuildContext context,
     required String title,
@@ -40,6 +47,8 @@ class DialogHelper {
   }
 }
 
+/// Private widget for the Delete Confirmation UI.
+/// Uses 'Error' color scheme to warn the user of destructive actions.
 class _ConfirmDeleteDialog extends StatelessWidget {
   final String title;
   final String content;
@@ -79,6 +88,8 @@ class _ConfirmDeleteDialog extends StatelessWidget {
   }
 }
 
+/// Private widget for Text Input UI.
+/// Encapsulates Form validation logic.
 class _EditTextDialog extends StatefulWidget {
   final String title;
   final String labelText;
@@ -113,6 +124,7 @@ class _EditTextDialogState extends State<_EditTextDialog> {
   }
 
   void _submitText() {
+    // Validate required fields before closing
     if (_formKey.currentState?.validate() ?? false) {
       Navigator.of(context).pop(_textController.text.trim());
     }
@@ -124,6 +136,7 @@ class _EditTextDialogState extends State<_EditTextDialog> {
       title: Text(widget.title),
       content: Form(
           key: _formKey,
+          // Reusing the app's standard form field widget
           child: FormTitleField(
             controller: _textController,
             labelText: widget.labelText,

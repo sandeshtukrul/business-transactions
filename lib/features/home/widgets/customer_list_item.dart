@@ -7,6 +7,8 @@ import 'package:business_transactions/shared/widgets/list_item/list_tile_content
 import 'package:business_transactions/shared/widgets/list_item/long_press_context_menu.dart';
 import 'package:flutter/material.dart';
 
+/// Represents a single customer card in the list.
+/// Wraps 'BaseListCard' to provide unified styling and gesture handling.
 class CustomerListItem extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onDelete;
@@ -26,6 +28,7 @@ class CustomerListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseListCard(
+      // Long Press triggers the Context Menu (Edit/Delete options)
       onLongPress: (details) => LongPressContextMenu(
         context: context,
         details: details,
@@ -45,6 +48,8 @@ class CustomerListItem extends StatelessWidget {
   }
 }
 
+// --- Private Helper Widgets for Internal Layout ---
+
 class _TrailingAmount extends StatelessWidget {
   const _TrailingAmount({
     required this.currentBalance,
@@ -57,6 +62,7 @@ class _TrailingAmount extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
+    // Visual Cue: Red for negative balance, Primary for positive
     final bool isNegative = currentBalance < 0;
     final Color amountColor =
         isNegative ? colorScheme.error : colorScheme.primary;

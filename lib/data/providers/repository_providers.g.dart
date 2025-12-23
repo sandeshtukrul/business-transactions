@@ -9,7 +9,10 @@ part of 'repository_providers.dart';
 String _$customerLocalDataSourceHash() =>
     r'0cf4663d73d0fe8e9804348867966cde5700dec5';
 
-/// See also [customerLocalDataSource].
+/// Provides the singleton instance of the local data source.
+/// 'keepAlive: true' ensures the database connection remains open throughout the app session.
+///
+/// Copied from [customerLocalDataSource].
 @ProviderFor(customerLocalDataSource)
 final customerLocalDataSourceProvider =
     Provider<CustomerLocalDataSource>.internal(
@@ -28,7 +31,10 @@ typedef CustomerLocalDataSourceRef = ProviderRef<CustomerLocalDataSource>;
 String _$customerRepositoryHash() =>
     r'20abbd3172155e4a340b9c62648d0fac864b332d';
 
-/// See also [customerRepository].
+/// Provides the CustomerRepository.
+/// Acts as the central point for UI layers to access data logic.
+///
+/// Copied from [customerRepository].
 @ProviderFor(customerRepository)
 final customerRepositoryProvider = Provider<CustomerRepository>.internal(
   customerRepository,

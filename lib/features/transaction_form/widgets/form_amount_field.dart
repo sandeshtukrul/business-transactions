@@ -3,6 +3,7 @@ import 'package:business_transactions/core/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// Text field specifically configured for Currency input.
 class FormAmountField extends StatelessWidget {
   final TextEditingController controller;
 
@@ -18,6 +19,7 @@ class FormAmountField extends StatelessWidget {
         prefixIcon: Icon(Icons.currency_rupee_sharp),
       ),
       keyboardType: TextInputType.numberWithOptions(decimal: true),
+      // REGEX: Allows digits and optional decimal with up to 2 digits.
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'^\d*(\.\d{0,2})?$')),
       ],

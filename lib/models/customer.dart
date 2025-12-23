@@ -4,9 +4,8 @@ import 'package:uuid/uuid.dart';
 
 part 'customer.g.dart';
 
-// DATA MODEL:
-// This class defines what a "Customer" looks like.
-// It extends HiveObject, which gives it abilities like .save() and .delete()
+/// Represents a customer entity in the local database.
+/// Extends [HiveObject] to enable direct save/delete operations on instances.
 @HiveType(typeId: 0)
 class Customer extends HiveObject {
   @HiveField(0)
@@ -32,10 +31,8 @@ class Customer extends HiveObject {
         transactions = transactions ?? const [];
 
 
-  // IMMUTABILITY PATTERN (copyWith):
-  // In Flutter, we avoid changing variables directly.
-  // Instead, we create a new copy of the object with the updated values.
-  // This prevents accidental bugs where data changes in one place but not another.
+  /// Creates a copy of the customer with updated fields.
+  /// Essential for immutable state updates in Riverpod.
   Customer copyWith({
     String? id,
     String? name,
@@ -51,17 +48,16 @@ class Customer extends HiveObject {
   }
 
 
-  // COMPUTED PROPERTY:
-  // We don't store the "Balance" in the database. Why?
-  // Because if we edit a transaction, the stored balance would be wrong (out of sync).
-  // Instead, we calculate it live every time we need it. 
-  // This ensures the balance is ALWAYS 100% accurate.
+  /// Calculates the current balance dynamically from the transaction history.
+  /// This serves as the "Single Source of Truth," preventing synchronization errors
+  /// that occur when storing a separate 'balance' field.
+  /// This ensures the balance is ALWAYS 100% accurate.
   int get currentBalance {
     return transactions.fold<int>(0, (sum, transaction) {
       if (transaction.type == TransactionType.sent) {
-        return sum - transaction.amount;
+        return sum - transaction.amount; // Outflow (Debit)
       } else {
-        return sum + transaction.amount;
+        return sum + transaction.amount; // Inflow (Credit)
       }
     });
   }

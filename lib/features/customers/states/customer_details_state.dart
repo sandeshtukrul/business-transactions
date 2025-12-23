@@ -4,13 +4,17 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'customer_details_state.freezed.dart';
 
+
+/// Holds the UI state for the Customer Details screen.
+/// Uses [Freezed] for immutability and copyWith support.
 @freezed
 class CustomerDetailsState with _$CustomerDetailsState {
   const factory CustomerDetailsState({
-    // This holds the actual customer data
+    /// The customer object being displayed.
     Customer? customer,
 
-    // This holds the temporary UI state for the undo action
+    /// Transient state holding the last deleted transaction for "Undo" functionality.
+    /// Format: (Transaction Object, Original Index)
     (Transaction, int)? lastDeletedTransaction,
   }) = _CustomerDetailsState;
 }

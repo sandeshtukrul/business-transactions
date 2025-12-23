@@ -1,6 +1,7 @@
 import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:flutter/material.dart';
 
+/// Displays a circular avatar with the first letter of the item's name.
 class LeadingCircle extends StatelessWidget {
   final String label;
 

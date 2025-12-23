@@ -1,6 +1,9 @@
 import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:flutter/material.dart';
 
+/// A reusable error state widget.
+/// Displays a user-friendly message, a retry button, and an expandable
+/// technical log (Stack Trace) for developers/debugging.
 class ErrorView extends StatelessWidget {
   final Object error;
   final StackTrace? stackTrace;
@@ -33,6 +36,8 @@ class ErrorView extends StatelessWidget {
             children: [
               Icon(Icons.error_outline, color: colorScheme.error, size: 64),
               const SizedBox(height: 20),
+
+              // User-Facing Error Message
               Text(
                 title ?? errorStateDefaultTitle,
                 textAlign: TextAlign.center,
@@ -50,6 +55,8 @@ class ErrorView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
+
+              // Expandable Technical Details (Stack Trace)
               if (error.toString().trim().isNotEmpty)
                 Theme(
                   data: theme.copyWith(dividerColor: Colors.transparent),
@@ -83,6 +90,8 @@ class ErrorView extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: 24),
+
+              // Retry Action
               ElevatedButton.icon(
                 icon: const Icon(Icons.refresh),
                 label: const Text(retryButton),

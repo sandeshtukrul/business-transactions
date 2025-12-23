@@ -1,6 +1,8 @@
 import 'package:business_transactions/core/utils/validators.dart';
 import 'package:flutter/material.dart';
 
+/// A versatile text field that can switch between "Input Mode" and "Display Mode".
+/// Used for displaying the Customer Name (Read-only) when adding a transaction.
 class FormTitleField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;

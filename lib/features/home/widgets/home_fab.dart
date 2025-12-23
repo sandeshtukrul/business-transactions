@@ -17,6 +17,8 @@ class MyFab extends StatelessWidget {
   }
 }
 
+/// Controls the visibility of the FAB based on the current Tab.
+/// Extends [AnimatedWidget] to listen to the TabController's animation changes
 class FabManager extends AnimatedWidget {
   final TabController tabController;
   final VoidCallback onPressed;
@@ -29,6 +31,7 @@ class FabManager extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Only show FAB on the "Customers" tab (Index 0)
     final bool showFab = tabController.index == 0;
 
     return showFab ? MyFab(onPressed: onPressed) : const SizedBox.shrink();

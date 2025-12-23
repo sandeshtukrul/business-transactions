@@ -5,13 +5,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'repository_providers.g.dart';
 
-// Provider for CustomerLocalDataSource
+/// Provides the singleton instance of the local data source.
+/// 'keepAlive: true' ensures the database connection remains open throughout the app session.
 @Riverpod(keepAlive: true)
 CustomerLocalDataSource customerLocalDataSource(Ref ref) {
   return CustomerLocalDataSource.instance;
 }
 
-// Provider for CustomerRepository
+/// Provides the CustomerRepository.
+/// Acts as the central point for UI layers to access data logic.
 @Riverpod(keepAlive: true)
 CustomerRepository customerRepository(Ref ref) {
   final localDataSource = ref.watch(customerLocalDataSourceProvider);

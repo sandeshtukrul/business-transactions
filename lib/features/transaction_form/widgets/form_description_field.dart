@@ -1,6 +1,7 @@
 import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:flutter/material.dart';
 
+/// Text area for adding optional notes or descriptions.
 class FormDescriptionField extends StatelessWidget {
   final TextEditingController controller;
 

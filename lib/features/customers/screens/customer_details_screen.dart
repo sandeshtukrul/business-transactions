@@ -17,12 +17,15 @@ class CustomerDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // LISTENER: Watches specific state changes to trigger Side Effects (Snackbars).
     ref.listen(
         customerDetailsControllerProvider(customerId)
             .select((state) => state.valueOrNull?.lastDeletedTransaction),
         (previous, next) {
       if (next != null) {
         final (deletedTransaction, index) = next;
+
+        // Show Undo Snackbar
         SnackbarHelper.showSuccess(
             context, '"${deletedTransaction.partyName}" $deletedSuccessfully,',
             onAction: () {
@@ -30,6 +33,7 @@ class CustomerDetailsScreen extends ConsumerWidget {
               .read(customerDetailsControllerProvider(customerId).notifier)
               .undoDeleteTransaction();
 
+          // Clear undo cache after delay to prevent double-triggering
           Future.delayed(const Duration(milliseconds: 100), () {
             ref
                 .read(customerDetailsControllerProvider(customerId).notifier)
@@ -39,13 +43,12 @@ class CustomerDetailsScreen extends ConsumerWidget {
       }
     });
 
+    // WATCHER: Rebuilds UI when customer data changes.
     final asyncState = ref.watch(customerDetailsControllerProvider(customerId));
 
     return Scaffold(
       floatingActionButton: MyFab(onPressed: () async {
-        if (asyncState.valueOrNull?.customer == null) {
-          return; // Don't proceed if no customer data
-        }
+        if (asyncState.valueOrNull?.customer == null) return; // Don't proceed if no customer data
 
         final newTransaction = await Navigator.push<Transaction>(
           context,

@@ -1,6 +1,8 @@
 import 'package:business_transactions/shared/widgets/list_item/leading_circle.dart';
 import 'package:flutter/material.dart';
 
+/// The internal layout of a list card.
+/// Uses [ListTile] for consistent spacing of Leading, Title, and Trailing elements.
 class ListTileContent extends StatelessWidget {
   final String title;
   final Widget trailing;
@@ -24,6 +26,7 @@ class ListTileContent extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      // Displays the first letter of the name
       leading: LeadingCircle(label: title),
       title: Text(
         title,

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 enum LongPressAction { edit, delete }
 
+/// Handles the logic for showing a popup menu on long-press.
 class LongPressContextMenu {
   final BuildContext context;
   final LongPressStartDetails details;
@@ -18,10 +19,13 @@ class LongPressContextMenu {
   });
 
   void show() {
+    // Provide haptic feedback (vibration) for better UX
     HapticFeedback.mediumImpact();
 
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    // Calculate the position relative to the screen overlay
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(details.globalPosition, details.globalPosition),
       Offset.zero & overlay.size,

@@ -11,6 +11,8 @@ import 'package:business_transactions/shared/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Renders the scrollable list of customers or an empty state.
+/// Handles high-level UI interactions (Navigation, Dialogs) before calling the Controller.
 class CustomersTabContent extends ConsumerWidget {
   final List<Customer> customerData;
 
@@ -30,29 +32,30 @@ class CustomersTabContent extends ConsumerWidget {
       );
     }
 
+    // Using ListView.builder for performance (lazy loading items as they scroll).
     return ListView.builder(
-      padding: const EdgeInsets.all(16), // Add padding around the list
+      padding: const EdgeInsets.all(16),
       itemCount: customerData.length,
       itemBuilder: (_, index) {
         final customer = customerData[index];
         return CustomerListItem(
-          key: ValueKey(customer.id),
+          key: ValueKey(customer.id), // Performance optimization for list updates
           customer: customer,
-          onTap: () async {
-            await _handleOnTap(context, customer, ref);
-          },
-          onSendReceiveTap: (updatedCustomer) =>
-              _handleSendReceiveTap(context, updatedCustomer, ref),
-          onEdit: () async {
-            await _editCustomerName(context, customer, ref);
-          },
-          onDelete: () async {
-            await _deleteCustomer(context, customer, index, ref);
-          },
+
+          // --- Interaction Callbacks ---
+          onTap: () async => await _handleOnTap(context, customer, ref),
+
+          onSendReceiveTap: (updatedCustomer) => _handleSendReceiveTap(context, updatedCustomer, ref),
+
+          onEdit: () async => await _editCustomerName(context, customer, ref),
+
+          onDelete: () async => await _deleteCustomer(context, customer, index, ref),
         );
       },
     );
   }
+
+  // --- Helper Methods to keep build() clean ---
 
   Future<void> _deleteCustomer(BuildContext context, Customer customerToDelete,
       int index, WidgetRef ref) async {
@@ -102,6 +105,8 @@ class CustomersTabContent extends ConsumerWidget {
             customerId: customer.id,
           ),
         ));
+    
+    // Invalidate provider to force a data refresh when returning from Details screen
     if (context.mounted) {
       ref.invalidate(homeScreenControllerProvider);
     }

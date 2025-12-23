@@ -16,9 +16,11 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CustomerDetailsState {
-// This holds the actual customer data
-  Customer? get customer =>
-      throw _privateConstructorUsedError; // This holds the temporary UI state for the undo action
+  /// The customer object being displayed.
+  Customer? get customer => throw _privateConstructorUsedError;
+
+  /// Transient state holding the last deleted transaction for "Undo" functionality.
+  /// Format: (Transaction Object, Original Index)
   (Transaction, int)? get lastDeletedTransaction =>
       throw _privateConstructorUsedError;
 
@@ -116,10 +118,12 @@ class _$CustomerDetailsStateImpl implements _CustomerDetailsState {
   const _$CustomerDetailsStateImpl(
       {this.customer, this.lastDeletedTransaction});
 
-// This holds the actual customer data
+  /// The customer object being displayed.
   @override
   final Customer? customer;
-// This holds the temporary UI state for the undo action
+
+  /// Transient state holding the last deleted transaction for "Undo" functionality.
+  /// Format: (Transaction Object, Original Index)
   @override
   final (Transaction, int)? lastDeletedTransaction;
 
@@ -160,10 +164,12 @@ abstract class _CustomerDetailsState implements CustomerDetailsState {
           final (Transaction, int)? lastDeletedTransaction}) =
       _$CustomerDetailsStateImpl;
 
-// This holds the actual customer data
+  /// The customer object being displayed.
   @override
-  Customer?
-      get customer; // This holds the temporary UI state for the undo action
+  Customer? get customer;
+
+  /// Transient state holding the last deleted transaction for "Undo" functionality.
+  /// Format: (Transaction Object, Original Index)
   @override
   (Transaction, int)? get lastDeletedTransaction;
 
