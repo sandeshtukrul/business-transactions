@@ -2,6 +2,7 @@ import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:business_transactions/features/home/screens/home_screen.dart';
 import 'package:business_transactions/features/home/widgets/error_view.dart';
 import 'package:business_transactions/features/splash/controllers/splash_controller.dart';
+import 'package:business_transactions/features/splash/widgets/splash_branding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -34,24 +35,15 @@ class SplashScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
         // Robustly handle loading and error states during startup.
         body: splashState.when(
-          data: (_) => _buildLottie(),
+          data: (_) => const SplashBranding(),
           error: (error, stackTrace) => ErrorView(
             error: error,
             stackTrace: stackTrace,
             title: splashInitializationFailedTitle,
             onRetry: () => ref.invalidate(splashControllerProvider),
           ),
-          loading: () => _buildLottie(),
-        ));
-  }
-
-  Widget _buildLottie() {
-    return Center(
-      child: Lottie.asset(
-        splashLottiePath,
-        width: 300,
-        height: 300,
-      ),
-    );
+          loading: () => const SplashBranding(),
+        ),
+        );
   }
 }

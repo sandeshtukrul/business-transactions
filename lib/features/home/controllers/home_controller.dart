@@ -2,6 +2,7 @@ import 'package:business_transactions/data/providers/repository_providers.dart';
 import 'package:business_transactions/data/repositories/customer_repository.dart';
 import 'package:business_transactions/features/home/states/home_state.dart';
 import 'package:business_transactions/models/customer.dart';
+import 'package:business_transactions/models/transaction.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -37,6 +38,30 @@ class HomeScreenController extends _$HomeScreenController {
   Future<List<Customer>> _loadInitialData() async {
     List<Customer> customers = await _repository.fetchCustomers();
     return customers;
+  }
+
+  /// Adds new transaction to current customer.
+  Future<void> addTransaction(String customerId, Transaction newTransaction) async {
+    if (state.value == null) return;
+
+    final originalList = state.value!.customers;
+    final index = originalList.indexWhere((c) => c.id == customerId);
+
+    if (index == -1) return; // Guard clause if customer not found
+
+    final customer = originalList[index];
+    final updatedCustomer = customer.copyWith(transactions: [...customer.transactions, newTransaction],
+    );
+
+    final newList = List<Customer>.from(originalList);
+    newList[index] = updatedCustomer;
+    _updateState(state.value!.copyWith(customers: newList));
+
+    try {
+      await _repository.saveCustomer(updatedCustomer);
+    } catch (e) {
+      _updateState(state.value!.copyWith(customers: originalList));
+    }
   }
 
 

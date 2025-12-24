@@ -82,14 +82,11 @@ class CustomersTabContent extends ConsumerWidget {
           ),
         ));
     if (newTransaction != null) {
-      final updatedCustomer = customer.copyWith(
-        transactions: [...customer.transactions, newTransaction],
-      );
       await ref
           .read(homeScreenControllerProvider.notifier)
-          .updateCustomer(updatedCustomer);
+          .addTransaction(customer.id, newTransaction);
 
-      final message = '$newTransactionAdded "${updatedCustomer.name}"';
+      final message = '$newTransactionAdded "${customer.name}"';
 
       if (!context.mounted) return;
       SnackbarHelper.showSuccess(context, message);

@@ -1,4 +1,4 @@
-import 'package:business_transactions/data/local/customer_local_data_source.dart';
+import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:business_transactions/models/customer.dart';
 import 'package:business_transactions/models/transaction.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -18,7 +18,7 @@ Future<void> bootstrap() async {
   Hive.registerAdapter(TransactionTypeAdapter());
 
 
-  // 3. OPEN BOXES:
-  // Pre-open the main database box to prevent loading delays on the Home Screen.
-  await CustomerLocalDataSource.instance.init();
+  // 3. Open the Box here (globally accessible via Hive.box later)
+  // This ensures the box is open before any Provider tries to read it.
+  await Hive.openBox<Customer>(customersBox);
 }

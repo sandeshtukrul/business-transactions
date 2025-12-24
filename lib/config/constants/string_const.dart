@@ -1,3 +1,7 @@
+// App Branding
+const String appName = 'LedgerFlow';
+const String appTagline = 'Business Made Simple';
+
 // --- APP TITLES & NAVIGATION ---
 const String homeTitlePrefix = 'Welcome';
 const String balanceAmount = 'Balance Amount';
@@ -94,7 +98,6 @@ const List<String> paymentMethods = ['Cash', 'Bank Transfer', 'UPI'];
 const String appbarWavesSvgPath = 'assets/vectors/appbar_waves.svg';
 const String noCustomersLottiePath = 'assets/lottie/no_customers.json';
 const String noTransactionsLottiePath = 'assets/lottie/no_transactions.json';
-const String splashLottiePath = 'assets/lottie/splash.json';
 
 // --- EXCEPTION MESSAGES ---
 const String couldNotFetchCustomersException = 'Could not fetch customers';

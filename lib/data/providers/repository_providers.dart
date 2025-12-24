@@ -1,15 +1,20 @@
+import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:business_transactions/data/local/customer_local_data_source.dart';
 import 'package:business_transactions/data/repositories/customer_repository.dart';
+import 'package:business_transactions/models/customer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'repository_providers.g.dart';
 
-/// Provides the singleton instance of the local data source.
-/// 'keepAlive: true' ensures the database connection remains open throughout the app session.
+// Provider for CustomerLocalDataSource
 @Riverpod(keepAlive: true)
 CustomerLocalDataSource customerLocalDataSource(Ref ref) {
-  return CustomerLocalDataSource.instance;
+  // Retrieve the already-opened box using Hive.box
+  final box = Hive.box<Customer>(customersBox);
+
+  return CustomerLocalDataSource(box);
 }
 
 /// Provides the CustomerRepository.
