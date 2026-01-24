@@ -1,18 +1,20 @@
+import 'package:business_transactions/config/constants/string_const.dart';
 import 'package:flutter/material.dart';
 
-class HommeFab extends StatelessWidget {
+class HomeFab extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const HommeFab({
+  const HomeFab({
     super.key,
     required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
+    return FloatingActionButton.extended(
+      label: const Text(newJob),
       onPressed: onPressed,
-      child: Icon(Icons.add),
+      icon: const Icon(Icons.add_task),
     );
   }
 }

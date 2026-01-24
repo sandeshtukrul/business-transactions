@@ -13,28 +13,29 @@ class JobLocalDataSource {
   }
 
   /// Add or Update a Job
-  Future<void> addOrUpdateJob(Job job) async {
-    if (_jobsBox.containsKey(job.key)) {
-      await _jobsBox.put(job.key, job);
-    } else {
-      await _jobsBox.add(job);
-    }
+  /// This handles both Create (new ID) and Update (existing ID)
+  Future<void> saveJob(Job job) async {
+    // If your Job model extends HiveObject, you can use job.save() 
+    // But putting explicitly by ID is safer for strict control.
+    await _jobsBox.put(job.id, job);
   }
 
   /// Get a specific job by ID
   Future<Job?> getJobById(String jobId) async {
     try {
-      return _jobsBox.values.firstWhere((j) => j.id == jobId);
+      // Direct lookup is faster than filtering list if using ID as key
+      return _jobsBox.get(jobId) ?? _jobsBox.values.firstWhere((j) => j.id == jobId);
     } catch (e) {
       return null;
     }
   }
 
   /// Add a transaction to a specific job
-  /// We do this here to ensure the Hive 'save' happens on the correct object instance.
   Future<void> addTransactionToJob(String jobId, Transaction transaction) async {
-    final job = _jobsBox.values.firstWhere((j) => j.id == jobId);
-    job.transactions.add(transaction);
-    await job.save();
+    final job = await getJobById(jobId);
+    if (job != null) {
+      job.transactions.add(transaction);
+      await saveJob(job); // Re-save to persist list change
+    }
   }
 }

@@ -71,3 +71,5 @@ enum TransactionType {
   @HiveField(1)
   received, // Money received (Income/Credit)
 }
+
+enum PaymentMethod { upi, cash, other, bank }

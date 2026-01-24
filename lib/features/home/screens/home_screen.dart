@@ -5,7 +5,7 @@ import 'package:business_transactions/features/home/widgets/dashboard_view.dart'
 import 'package:business_transactions/features/home/widgets/error_view.dart';
 import 'package:business_transactions/features/home/widgets/home_fab.dart';
 import 'package:business_transactions/features/home/widgets/mesh_background.dart';
-import 'package:business_transactions/features/transaction_form/screens/transaction_form_screen.dart';
+import 'package:business_transactions/features/jobs/screens/add_job_screen.dart';
 import 'package:business_transactions/models/customer.dart';
 import 'package:business_transactions/shared/helpers/snackbar_helper.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        floatingActionButton: HommeFab(onPressed: _handleFabPressed),
+        floatingActionButton: HomeFab(onPressed: _handleFabPressed),
         bottomNavigationBar: BottomNav(
             currentIndex: _currentIndex,
             onTap: (index) => setState(
@@ -138,20 +138,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _handleFabPressed() async {
     // Navigate to form and wait for result (newCustomer)
-    final newCustomer = await Navigator.push<Customer>(
+    await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const TransactionForm()),
+      MaterialPageRoute(builder: (context) => const AddJobScreen()),
     );
-
-    // If a customer was actually created, tell the controller to add it.
-    if (newCustomer != null) {
-      await ref
-          .read(homeScreenControllerProvider.notifier)
-          .addCustomer(newCustomer);
-
-      if (!mounted) return;
-      SnackbarHelper.showSuccess(
-          context, '"${newCustomer.name}" $addedSuccessfully');
-    }
   }
 }

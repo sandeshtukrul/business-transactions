@@ -25,15 +25,17 @@ class JobAdapter extends TypeAdapter<Job> {
       status: fields[3] == null ? JobStatus.open : fields[3] as JobStatus,
       createdAt: fields[4] as DateTime?,
       closedAt: fields[5] as DateTime?,
-      totalBill: fields[9] == null ? 0 : (fields[9] as num).toInt(),
+      totalBill: fields[9] == null ? 0.0 : (fields[9] as num).toDouble(),
       transactions: (fields[6] as List?)?.cast<Transaction>(),
+      title: fields[10] as String,
+      isAdvancePayment: fields[11] == null ? false : fields[11] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Job obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,7 +55,11 @@ class JobAdapter extends TypeAdapter<Job> {
       ..writeByte(8)
       ..write(obj.vehicleNameSnapshot)
       ..writeByte(9)
-      ..write(obj.totalBill);
+      ..write(obj.totalBill)
+      ..writeByte(10)
+      ..write(obj.title)
+      ..writeByte(11)
+      ..write(obj.isAdvancePayment);
   }
 
   @override
@@ -78,6 +84,8 @@ class JobStatusAdapter extends TypeAdapter<JobStatus> {
         return JobStatus.open;
       case 1:
         return JobStatus.closed;
+      case 2:
+        return JobStatus.pending;
       default:
         return JobStatus.open;
     }
@@ -90,6 +98,8 @@ class JobStatusAdapter extends TypeAdapter<JobStatus> {
         writer.writeByte(0);
       case JobStatus.closed:
         writer.writeByte(1);
+      case JobStatus.pending:
+        writer.writeByte(2);
     }
   }
 

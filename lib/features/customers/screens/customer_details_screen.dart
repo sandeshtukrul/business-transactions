@@ -47,7 +47,7 @@ class CustomerDetailsScreen extends ConsumerWidget {
     final asyncState = ref.watch(customerDetailsControllerProvider(customerId));
 
     return Scaffold(
-      floatingActionButton: HommeFab(onPressed: () async {
+      floatingActionButton: HomeFab(onPressed: () async {
         if (asyncState.valueOrNull?.customer == null)
           return; // Don't proceed if no customer data
 

@@ -10,6 +10,8 @@ enum JobStatus {
   open,
   @HiveField(1)
   closed,
+  @HiveField(2)
+  pending, // Added this because Controller uses it
 }
 
 @HiveType(typeId: 5)
@@ -18,10 +20,10 @@ class Job extends HiveObject {
   final String id;
 
   @HiveField(1)
-  final String customerId; // Foreign Key to Customer
+  final String customerId;
 
   @HiveField(2)
-  final String? vehicleId; // Foreign Key to Vehicle inside Customer
+  final String? vehicleId;
 
   @HiveField(3)
   final JobStatus status;
@@ -35,8 +37,6 @@ class Job extends HiveObject {
   @HiveField(6)
   final List<Transaction> transactions;
 
-  // --- SNAPSHOTS (Safety against deletion) ---
-  // If you delete the Customer/Vehicle later, these strings keep history readable.
   @HiveField(7)
   final String customerNameSnapshot; 
 
@@ -44,7 +44,15 @@ class Job extends HiveObject {
   final String? vehicleNameSnapshot;
 
   @HiveField(9)
-  final int totalBill;
+  final double totalBill; // CHANGED TO DOUBLE (Safer for money)
+
+  // --- NEW FIELD ---
+  @HiveField(10)
+  final String title; 
+
+  // --- NEW FIELD for Advance Payment Toggle ---
+  @HiveField(11)
+  final bool isAdvancePayment;
 
   Job({
     String? id,
@@ -55,13 +63,14 @@ class Job extends HiveObject {
     this.status = JobStatus.open,
     DateTime? createdAt,
     this.closedAt,
-    this.totalBill = 0,
+    this.totalBill = 0.0, // Default to 0.0
     List<Transaction>? transactions,
+    required this.title, // Required now
+    this.isAdvancePayment = false,
   })  : id = id ?? const Uuid().v4(),
         createdAt = createdAt ?? DateTime.now(),
         transactions = transactions ?? [];
 
-  
   Job copyWith({
     String? id,
     String? customerId,
@@ -71,8 +80,10 @@ class Job extends HiveObject {
     JobStatus? status,
     DateTime? createdAt,
     DateTime? closedAt,
-    int? totalBill,
+    double? totalBill,
     List<Transaction>? transactions,
+    String? title,
+    bool? isAdvancePayment,
   }) {
     return Job(
       id: id ?? this.id,
@@ -85,33 +96,27 @@ class Job extends HiveObject {
       closedAt: closedAt ?? this.closedAt,
       totalBill: totalBill ?? this.totalBill,
       transactions: transactions ?? this.transactions,
+      title: title ?? this.title,
+      isAdvancePayment: isAdvancePayment ?? this.isAdvancePayment,
     );
   }
 
-// --- REVISED GETTERS ---
-
-  /// 1. Money In (From Customer)
-  int get totalCollected {
+  // --- GETTERS (Updated for Double) ---
+  double get totalCollected {
     return transactions
         .where((t) => t.type == TransactionType.received)
-        .fold(0, (sum, t) => sum + t.amount);
+        .fold(0.0, (sum, t) => sum + t.amount); // Assuming Transaction amount is double too?
   }
 
-  /// 2. Money Out (Vendor Expenses + Dad Transfers)
-  int get totalExpenses {
+  double get totalExpenses {
     return transactions
         .where((t) => t.type == TransactionType.sent)
-        .fold(0, (sum, t) => sum + t.amount);
+        .fold(0.0, (sum, t) => sum + t.amount);
   }
 
-  /// 3. Pending Due (Logic: Bill - Collected)
-  /// This separates "Your Costs" from "Customer's Bill"
-  int get dueAmount => totalBill - totalCollected;
+  double get dueAmount => totalBill - totalCollected;
 
-  /// 4. Is the Job Settled? (Customer paid fully)
-  bool get isFullyPaid => totalBill > 0 && dueAmount <= 0;
+  bool get isFullyPaid => totalBill > 0 && dueAmount <= 0.01; // Float tolerance
 
-  /// 5. Current Cash Balance in this Job
-  /// (Should be 0 after you transfer profit to Dad)
-  int get cashBalance => totalCollected - totalExpenses;
+  double get cashBalance => totalCollected - totalExpenses;
 }

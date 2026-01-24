@@ -6,6 +6,7 @@ const String appTagline = 'Business Made Simple';
 const String txtWelcomeBack = "Welcome back,";
 const String txtCashInHand = "CASH IN HAND";
 const String txtToCollect = "TO COLLECT";
+const String newJob = "New Job";
 
 // Dashboard Status Pills
 const String statusPaid = "PAID";

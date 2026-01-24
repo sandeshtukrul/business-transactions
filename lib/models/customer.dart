@@ -18,6 +18,8 @@ class Customer extends HiveObject {
   @HiveField(2)
   final DateTime createdAt;
 
+  // delete this after migration we don't need this 
+  // but keep in mind home controller is connected to it as of now
   @HiveField(3)
   final List<Transaction> legacyTransactions;
 

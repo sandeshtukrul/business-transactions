@@ -7,7 +7,7 @@ part of 'transaction_form_controller.dart';
 // **************************************************************************
 
 String _$transactionFormControllerHash() =>
-    r'85efd6870ace1dc2d57ec8267ea350e6e369363e';
+    r'760cd44fd747dede09142146af8d71660b0f0812';
 
 /// Copied from Dart SDK
 class _SystemHash {

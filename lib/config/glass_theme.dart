@@ -16,26 +16,30 @@ class GlassColors {
   static const Color blob3Dark = Color(0xFF1E293B); // Slate-800 (Dark Grey)
 
   // --- Glass Panels (The "Frosted" Cards) ---
-  static final Color glassPanelLight = Colors.white.withValues(alpha: 0.7);
-  static final Color glassPanelDark =
-      const Color(0xFF0F172A).withValues(alpha: 0.6);
+  static final Color glassPanelLight = Colors.white.withOpacity(0.7);
+  static final Color glassPanelDark = const Color(0xFF0F172A).withOpacity(0.6);
 
-  static final Color glassBorderLight = Colors.white.withValues(alpha: 0.5);
-  static final Color glassBorderDark = Colors.white.withValues(alpha: 0.1);
+  static final Color glassBorderLight = Colors.white.withOpacity(0.5);
+  static final Color glassBorderDark = Colors.white.withOpacity(0.1);
 
   // --- Bottom Navigation ---
   // Light Mode: Almost solid white
-  static final Color bottomNavLight = Colors.white.withValues(alpha: 0.95);
+  static final Color bottomNavLight = Colors.white.withOpacity(0.95);
   // Dark Mode: Dark Slate with transparency
-  static final Color bottomNavDark =
-      const Color(0xFF0F172A).withValues(alpha: 0.8);
+  static final Color bottomNavDark = const Color(0xFF0F172A).withOpacity(0.8);
 
   static final Color navBorderLight =
-      Colors.white.withValues(alpha: 1.0); // Solid top border
-  static final Color navBorderDark = Colors.white.withValues(alpha: 0.1);
+      Colors.white.withOpacity(1.0); // Solid top border
+  static final Color navBorderDark = Colors.white.withOpacity(0.1);
 
   // --- Text ---
   static const Color textDark = Color(0xFF0F172A); // Slate-900
   static const Color textSubtle = Color(0xFF64748B); // Slate-500
   static const Color textLight = Color(0xFFF1F5F9); // Slate-100 (For Dark Mode)
+
+  // --- High Contrast Input Colors (For Visibility) ---
+  static const Color inputFillLight = Color(0xFFF7F8FA); // Cool White/Gray
+  static const Color inputBorderLight = Color(0xFFD0D5DD); // Neutral Slate Gray
+  static const Color inputFillDark = meshBgDark;
+  static Color inputBorderDark = glassBorderDark;
 }

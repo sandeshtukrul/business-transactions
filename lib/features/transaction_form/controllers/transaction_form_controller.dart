@@ -73,9 +73,6 @@ class TransactionFormController extends _$TransactionFormController {
             type: state.transactionType,
             createdAt: state.selectedDateTime,
           );
-          // Return new Customer with the initial transaction
-          result = Customer(
-              name: customerName.trim(), legacyTransactions: [newTransaction]);
           break;
 
         case FormMode.addTransaction:
